@@ -1,205 +1,509 @@
 # Feature Engineering for Machine Learning
 
-A hands-on exploration of **feature engineering for machine learning**, covering the complete journey from raw data to reliable, model-ready features.
+A production-oriented exploration of **feature engineering for machine learning systems**, covering the complete lifecycle from raw data to validated model-ready features.
 
-The purpose of this repository is to understand how raw business data is transformed into useful numerical representations that machine learning models can learn from effectively.
+Feature engineering is not simply converting columns into numbers. In real machine learning systems, the quality, correctness, consistency, and availability of features directly affect model performance, training stability, inference behavior, and production reliability.
 
-Feature engineering is not simply about applying preprocessing functions. It requires understanding the data, identifying useful signals, preventing leakage, handling missing and noisy values, selecting meaningful features, and building reproducible feature pipelines.
+This repository focuses on understanding how raw business data becomes reliable machine learning features and how those features are maintained consistently across training, validation, batch inference, and online production inference.
 
 ---
 
-## Why Feature Engineering?
+## Why Feature Engineering Matters
 
-Real-world machine learning data rarely arrives in a form that can be directly given to a model.
+A machine learning model can only learn from the representation of the data provided to it.
 
-A typical dataset may contain:
-
-```text
-Missing Values
-Categorical Variables
-Numerical Variables
-Outliers
-Duplicate Records
-Different Scales
-Skewed Distributions
-High Cardinality
-Text
-Dates
-Time-Series Information
-Irrelevant Features
-Data Leakage
-```
-
-The transformation process is:
+The same raw dataset can produce dramatically different model behavior depending on how features are constructed.
 
 ```text
 Raw Data
    ↓
 Data Understanding
    ↓
-Data Cleaning
+Data Profiling
+   ↓
+Cleaning
+   ↓
+Feature Construction
    ↓
 Feature Transformation
    ↓
-Feature Creation
-   ↓
 Feature Selection
    ↓
-Feature Validation
+Validation
    ↓
-Model-Ready Dataset
+Training Features
+   ↓
+Model
 ```
 
----
-
-## My Intention
-
-I want to understand feature engineering from both a **machine learning perspective and a production engineering perspective**.
-
-The goal is to understand:
+A production feature pipeline must answer:
 
 ```text
-What makes a feature useful?
+Where did this feature come from?
 
-How should different data types be transformed?
+How was it calculated?
 
-How do we handle missing values?
+Was future information accidentally used?
 
-How do we deal with outliers?
+What happens when the value is missing?
 
-How do we encode categorical variables?
+How is the feature encoded?
 
-How do we prevent data leakage?
+What distribution does it have?
 
-How do we select important features?
+Does training use the same transformation as production?
 
-How do we create features from raw business data?
+What happens when a new category appears?
 
-How do we build reproducible feature pipelines?
+Can the feature be reproduced?
 
-How do we keep training and inference features consistent?
+Can the feature be monitored?
 ```
 
 ---
 
-## Topics
+## Core Engineering Problems
+
+This repository investigates common problems such as:
+
+* Missing values
+* Outliers
+* High-cardinality categorical variables
+* Numerical scaling
+* Encoding strategies
+* Feature interactions
+* Feature selection
+* Data leakage
+* Training-serving skew
+* Temporal leakage
+* Distribution changes
+* Feature drift
+* Sparse features
+* High-dimensional data
+* Reproducibility
+* Feature versioning
+
+---
+
+## Feature Types
 
 ### Numerical Features
 
 ```text
-Scaling
-Standardization
-Normalization
-Log Transformation
-Power Transformation
-Binning
-Clipping
-Outlier Handling
+Continuous
+Discrete
+Count
+Ratio
+Percentage
+Monetary
+Temporal
+Aggregated
 ```
 
 ### Categorical Features
 
 ```text
-Label Encoding
-Ordinal Encoding
-One-Hot Encoding
-Target Encoding
-Frequency Encoding
-Hash Encoding
-High-Cardinality Features
+Binary
+Nominal
+Ordinal
+High Cardinality
+Hierarchical
 ```
 
-### Missing Data
+### Temporal Features
+
+```text
+Year
+Month
+Week
+Day
+Hour
+Day of Week
+Weekend
+Season
+Time Since Event
+Rolling Statistics
+Lag Features
+```
+
+### Text-Derived Features
+
+```text
+Length
+Token Count
+TF-IDF
+Embeddings
+Keyword Features
+Semantic Features
+```
+
+---
+
+## Missing Data
+
+Different missing-value mechanisms require different treatment.
+
+```text
+MCAR
+MAR
+MNAR
+```
+
+Techniques explored:
 
 ```text
 Mean Imputation
 Median Imputation
 Mode Imputation
 Constant Imputation
-Forward Fill
-Backward Fill
-Missing Indicators
+KNN Imputation
+Iterative Imputation
+Missingness Indicators
 Model-Based Imputation
 ```
 
-### Feature Creation
+The repository also investigates when imputation itself can introduce bias.
+
+---
+
+## Encoding Categorical Data
+
+Methods include:
 
 ```text
-Interaction Features
-Polynomial Features
+One-Hot Encoding
+Ordinal Encoding
+Target Encoding
+Frequency Encoding
+Count Encoding
+Binary Encoding
+Hash Encoding
+Learned Embeddings
+```
+
+Special attention is given to:
+
+```text
+Unknown Categories
+Rare Categories
+High Cardinality
+Leakage
+Memory Usage
+Inference Consistency
+```
+
+---
+
+## Feature Scaling
+
+Methods explored:
+
+```text
+Standardization
+Min-Max Scaling
+Robust Scaling
+Max-Abs Scaling
+Log Transformation
+Power Transformation
+Quantile Transformation
+```
+
+The effect of scaling on:
+
+```text
+Linear Models
+Distance-Based Models
+Neural Networks
+Gradient-Based Optimization
+```
+
+will be investigated.
+
+---
+
+## Feature Construction
+
+Examples include:
+
+```text
 Ratios
+Differences
+Interactions
 Aggregations
-Date Features
-Time Features
-Rolling Statistics
+Rolling Windows
+Lag Features
+Cumulative Features
 Domain-Specific Features
 ```
 
-### Feature Selection
+Example:
+
+```text
+transactions
+      ↓
+customer_id
+      ↓
+aggregation
+      ↓
+total_spend
+average_order_value
+transaction_count
+days_since_last_purchase
+```
+
+---
+
+## Feature Selection
+
+Feature selection techniques include:
+
+```text
+Correlation Filtering
+Variance Filtering
+Mutual Information
+ANOVA
+Chi-Square
+Recursive Feature Elimination
+L1 Regularization
+Tree-Based Importance
+Permutation Importance
+```
+
+The repository compares:
 
 ```text
 Filter Methods
-Correlation
-Mutual Information
-Chi-Square
-ANOVA
-
 Wrapper Methods
-Recursive Feature Elimination
-
 Embedded Methods
-L1 Regularization
-Tree-Based Importance
 ```
 
-### Feature Leakage
+---
+
+## Leakage Prevention
+
+One of the most important production concerns.
+
+Examples:
 
 ```text
+Future Information
 Target Leakage
-Train-Test Contamination
 Temporal Leakage
-Feature Availability
-Production Leakage
+Train/Test Contamination
+Aggregation Leakage
+Preprocessing Leakage
 ```
 
-### Feature Pipelines
+Correct pipeline:
+
+```text
+Train Data
+    ↓
+Fit Transformation
+    ↓
+Transform Train
+
+Validation Data
+    ↓
+Transform Using Existing Fit
+    ↓
+Validate
+```
+
+Not:
+
+```text
+Full Dataset
+    ↓
+Fit Transformation
+    ↓
+Split Dataset
+```
+
+---
+
+## Training vs Serving Consistency
+
+A production system must maintain:
+
+```text
+Training Feature Definition
+             =
+Production Feature Definition
+```
+
+Potential problem:
+
+```text
+Training
+Python Transformation
+
+Production
+Different Implementation
+
+        ↓
+
+Training-Serving Skew
+```
+
+The repository explores strategies to prevent this.
+
+---
+
+## Feature Pipelines
+
+A typical pipeline:
+
+```text
+Raw Dataset
+     ↓
+Schema Validation
+     ↓
+Data Cleaning
+     ↓
+Numerical Pipeline
+     ↓
+Categorical Pipeline
+     ↓
+Feature Selection
+     ↓
+Feature Assembly
+     ↓
+Validation
+     ↓
+Model
+```
+
+Technologies explored include:
+
+```text
+NumPy
+Pandas
+Scikit-learn
+PyTorch
+Feature Stores
+```
+
+---
+
+## Production Feature Architecture
+
+```text
+                    ┌───────────────┐
+                    │ Raw Sources   │
+                    └───────┬───────┘
+                            ↓
+                    ┌───────────────┐
+                    │ Data Pipeline │
+                    └───────┬───────┘
+                            ↓
+                    ┌───────────────┐
+                    │ Feature Layer │
+                    └───────┬───────┘
+                       ┌────┴────┐
+                       ↓         ↓
+                 Offline Store  Online Store
+                       ↓         ↓
+                    Training   Inference
+```
+
+---
+
+## Validation
+
+Feature validation includes:
+
+```text
+Schema Validation
+Type Validation
+Range Validation
+Null Validation
+Cardinality Validation
+Distribution Validation
+Statistical Validation
+Drift Detection
+```
+
+---
+
+## Experiments
+
+Experiments will compare:
+
+```text
+Feature Set A
+Feature Set B
+Feature Set C
+```
+
+against:
+
+```text
+Accuracy
+Precision
+Recall
+F1
+ROC-AUC
+PR-AUC
+Latency
+Memory
+Training Cost
+```
+
+The goal is to understand whether additional features actually improve the system.
+
+---
+
+## Repository Structure
+
+```text
+feature-engineering-for-machine-learning/
+│
+├── README.md
+├── pyproject.toml
+│
+├── data/
+├── notebooks/
+│
+├── src/
+│   ├── profiling/
+│   ├── cleaning/
+│   ├── numerical/
+│   ├── categorical/
+│   ├── temporal/
+│   ├── text/
+│   ├── selection/
+│   ├── validation/
+│   └── pipelines/
+│
+├── experiments/
+├── benchmarks/
+├── tests/
+└── configs/
+```
+
+---
+
+## Final Objective
+
+The objective is to understand feature engineering as a **production ML engineering discipline**, not merely a preprocessing step.
+
+The final pipeline should be:
 
 ```text
 Raw Data
    ↓
-Validation
+Reliable Features
    ↓
-Transformation
+Validated Features
    ↓
-Feature Generation
+Versioned Features
    ↓
-Feature Selection
+Training
    ↓
-Feature Store
+Serving
    ↓
-Training / Inference
+Monitoring
+   ↓
+Continuous Improvement
 ```
-
----
-
-## Production Considerations
-
-The repository will also explore:
-
-```text
-Training-Serving Skew
-Feature Versioning
-Feature Validation
-Feature Lineage
-Feature Freshness
-Online Features
-Offline Features
-Feature Stores
-Reproducibility
-```
-
----
-
-## Goal
-
-The final goal is to understand how to transform messy real-world data into **reliable, meaningful, reproducible, and production-ready machine learning features**.
