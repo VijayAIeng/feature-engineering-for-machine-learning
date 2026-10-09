@@ -7,8 +7,8 @@ Feature engineering is not simply converting columns into numbers. In real machi
 This repository focuses on understanding how raw business data becomes reliable machine learning features and how those features are maintained consistently across training, validation, batch inference, and online production inference.
 
 ---
+ 
 
-## Why Feature Engineering Matters
 
 A machine learning model can only learn from the representation of the data provided to it.
 
