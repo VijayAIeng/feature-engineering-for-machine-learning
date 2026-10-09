@@ -8,7 +8,7 @@ This repository focuses on understanding how raw business data becomes reliable 
 
 ---
  
-
+## Why Feature Engineering Matters
 
 A machine learning model can only learn from the representation of the data provided to it.
 
