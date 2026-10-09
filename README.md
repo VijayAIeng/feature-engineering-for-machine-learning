@@ -62,7 +62,7 @@ Can the feature be monitored?
 
 ---
 
-## Core Engineering Problems
+
 
 This repository investigates common problems such as:
 
